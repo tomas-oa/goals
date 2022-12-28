@@ -1,12 +1,16 @@
 const Goal = require("../models/goal.model");
+const User = require("../models/user.model");
 
-const getAllGoals = async (req, res) => {
-  const goals = await Goal.find();
+const getUserGoals = async (req, res) => {
+  const { id } = req.user;
+
+  const goals = await Goal.find({ user: id });
   res.status(200).json(goals);
 };
 
 const createGoal = async (req, res) => {
   const { title, description } = req.body;
+  const { id } = req.user;
 
   if (!title || !description) {
     return res
@@ -15,6 +19,7 @@ const createGoal = async (req, res) => {
   }
 
   const newGoal = new Goal({
+    user: id,
     title: title,
     description: description,
   });
@@ -25,22 +30,32 @@ const createGoal = async (req, res) => {
 
 const updateGoal = async (req, res) => {
   const { title, description } = req.body;
-  const { id } = req.params;
+  const { id } = req.user;
 
-  if (!title || !description) {
+  if (!title && !description) {
     return res
       .status(400)
       .json({ msg: "por favor ingrese título y descripción" });
   }
 
-  const goal = await Goal.findByIdAndUpdate(id);
+  const goal = await Goal.findByIdAndUpdate(req.params.id);
 
   if (!goal) {
     return res.status(404).json({ msg: "no se encontró el objetivo" });
   }
 
+  const user = await User.findById(id);
+
+  if (goal.user.toString() !== user._id.toString()) {
+    return res.status(401).json({ msg: "no autorizado" });
+  }
+
+  if (!user) {
+    return res.status(401).json({ msg: "usuario no encontrado" });
+  }
+
   const updatedGoal = await Goal.findByIdAndUpdate(
-    id,
+    req.params.id,
     {
       title,
       description,
@@ -52,22 +67,33 @@ const updateGoal = async (req, res) => {
 };
 
 const deleteGoal = async (req, res) => {
-  const { id } = req.params;
-  const goal = await Goal.findById(id);
+  const { id } = req.user;
+  const goal = await Goal.findById(req.params.id);
 
   if (!goal) {
     return res.status(404).json({ msg: "no se encontró el objetivo" });
   }
 
-  if (!id) {
+  if (!req.params.id) {
     return res.status(400).json({ msg: "ingrese id del objetivo" });
   }
 
+  const user = await User.findById(id);
+
+  if (goal.user.toString() !== user._id.toString()) {
+    return res.status(401).json({ msg: "no autorizado" });
+  }
+
+  if (!user) {
+    return res.status(401).json({ msg: "usuario no encontrado" });
+  }
+
+  await goal.remove();
   res.status(200).json({ msg: "objetivo eliminado" });
 };
 
 module.exports = {
-  getAllGoals,
+  getUserGoals,
   createGoal,
   updateGoal,
   deleteGoal,
