@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
 import { FaUser } from "react-icons/fa";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { register, reset } from "../features/auth/auth.slice";
 
 function Register() {
   const [form, setForm] = useState({
@@ -11,6 +15,25 @@ function Register() {
 
   const { name, email, password, confirm } = form;
 
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { user, error, success, loading, message } = useSelector(
+    (state) => state.auth
+  );
+
+  useEffect(() => {
+    if (error) {
+      toast.error(message);
+    }
+    if (success || user) {
+      toast.success("Registro exitoso");
+      navigate("/login");
+    }
+
+    dispatch(reset());
+  }, [user, error, success, message, navigate, dispatch]);
+
   const onChange = (e) => {
     setForm((prevState) => ({
       ...prevState,
@@ -19,6 +42,17 @@ function Register() {
   };
   const onSubmit = (e) => {
     e.preventDefault();
+
+    if (password !== confirm) {
+      toast.error("Las contraseñas no coinciden");
+    } else {
+      const user = {
+        name,
+        email,
+        password,
+      };
+      dispatch(register(user));
+    }
   };
 
   return (
