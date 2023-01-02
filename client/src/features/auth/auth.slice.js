@@ -8,7 +8,7 @@ const initialState = {
   error: false,
   success: false,
   loading: false,
-  message: ""
+  message: "",
 };
 
 export const authSlice = createSlice({
@@ -20,5 +20,10 @@ export const authSlice = createSlice({
       state.success = false;
       state.loading = false;
       state.message = "";
-    }
-  }
+    },
+  },
+  extraReducers: () => {},
+});
+
+export const { reset } = authSlice.actions;
+export default authSlice.reducer;
