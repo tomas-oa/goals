@@ -27,7 +27,7 @@ function Register() {
     if (error) {
       toast.error(message);
     }
-    if (success || user) {
+    if (success) {
       toast.success("Registro exitoso");
       navigate("/");
     }
