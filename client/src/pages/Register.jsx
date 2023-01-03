@@ -15,10 +15,11 @@ function Register() {
   });
 
   const { name, email, password, confirm } = form;
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
 
-  const { user, loading, error, success, message } = useSelector(
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const { user, error, success, loading, message } = useSelector(
     (state) => state.auth
   );
 
@@ -26,13 +27,13 @@ function Register() {
     if (error) {
       toast.error(message);
     }
-
-    if (success || user) {
+    if (success) {
+      toast.success("Registro exitoso");
       navigate("/");
     }
 
     dispatch(reset());
-  }, [user, error, success, navigate, dispatch]);
+  }, [user, error, success, message, navigate, dispatch]);
 
   const onChange = (e) => {
     setForm((prevState) => ({
@@ -44,16 +45,14 @@ function Register() {
     e.preventDefault();
 
     if (password !== confirm) {
-      toast.error("contraseñas no coinciden");
-      return;
+      toast.error("Las contraseñas no coinciden");
     } else {
-      const data = {
+      const user = {
         name,
         email,
         password,
       };
-
-      dispatch(register(data));
+      dispatch(register(user));
     }
   };
 
