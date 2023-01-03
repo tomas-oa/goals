@@ -29,7 +29,7 @@ function Register() {
     }
     if (success || user) {
       toast.success("Registro exitoso");
-      navigate("/login");
+      navigate("/");
     }
 
     dispatch(reset());

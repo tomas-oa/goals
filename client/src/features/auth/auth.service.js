@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "/api/users/";
+const API_URL = "http://localhost:3000/api/users/register";
 
 const register = async (data) => {
   const response = await axios.post(API_URL, data);
@@ -12,8 +12,13 @@ const register = async (data) => {
   return response.data;
 };
 
+const logout = async () => {
+  localStorage.removeItem("user");
+};
+
 const authService = {
   register,
+  logout,
 };
 
 export default authService;
