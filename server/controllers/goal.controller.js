@@ -9,10 +9,10 @@ const getUserGoals = async (req, res) => {
 };
 
 const createGoal = async (req, res) => {
-  const { title, description } = req.body;
+  const { text } = req.body;
   const { id } = req.user;
 
-  if (!title || !description) {
+  if (!text) {
     return res
       .status(400)
       .json({ msg: "por favor ingrese título y descripción" });
@@ -20,8 +20,7 @@ const createGoal = async (req, res) => {
 
   const newGoal = new Goal({
     user: id,
-    title: title,
-    description: description,
+    title: text,
   });
 
   const goal = await newGoal.save();

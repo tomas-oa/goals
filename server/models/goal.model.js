@@ -11,10 +11,6 @@ const goalSchema = new mongoose.Schema(
       type: String,
       required: [true, "por favor añade un titulo"],
     },
-    description: {
-      type: String,
-      required: [true, "por favor añade una descripción"],
-    },
   },
   {
     timestamps: true,
