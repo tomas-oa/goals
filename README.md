@@ -7,7 +7,7 @@
 > Server
 
 - npm i
-- 
+
 > Client
 
 - cd client && npm i
