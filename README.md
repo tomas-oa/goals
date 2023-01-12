@@ -33,5 +33,6 @@ This will start the express server on port 3000 and client on port 5173 by defau
 - [Mongoose](https://mongoosejs.com/)
 - [Redux Toolkit](https://redux-toolkit.js.org/)
 - [react-toastify](https://www.npmjs.com/package/react-toastify)
+- [React Router](https://reactrouter.com/en/main)
 - [Vite](https://vitejs.dev/)
 - [JWT](https://jwt.io/)
